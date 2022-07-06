@@ -11,7 +11,7 @@ services:
         environment:
           RABBITMQ_CONFIG_FILE: ./rabbitmq.conf
         ports:
-          - "5673:5673"
+          - "5672:5672"
           - "15672:15672"
         volumes:
           - .:/app

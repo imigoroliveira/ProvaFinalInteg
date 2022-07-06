@@ -20,7 +20,7 @@ async def cadastrar(request: Request):
     queue_saque = f"{agencia}_{conta}_saque"
     queue_deposito = f"{agencia}_{conta}_deposito"
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost:15672'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', port=5672))
     channel = connection.channel()
     channel.queue_declare(queue=queue_saque)
     channel.queue_declare(queue=queue_deposito)
@@ -30,7 +30,7 @@ async def cadastrar(request: Request):
 
 @app.put("/conta/depositar/{agencia}/{conta}/{valor}")
 async def depositar(agencia: str, conta: str, valor: float):
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost:15672'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', port=5672))
     channel = connection.channel()
     channel.basic_publish(
         exchange='',
@@ -60,7 +60,7 @@ async def depositar(agencia: str, conta: str, valor: float):
 
 @app.put("/conta/sacar/{agencia}/{conta}/{valor}")
 async def sacar(agencia: str, conta: str, valor: float):
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', port=5672))
     channel = connection.channel()
     channel.basic_publish(
         exchange='',
